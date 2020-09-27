@@ -1,0 +1,15 @@
+<x:Envelope
+    xmlns:x="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:ws="http://ws.online.asp.core.paperless.cl">
+    <x:Header/>
+    <x:Body>
+        <ws:OnlineRecovery>
+            <ws:ruc>@@ruc@@</ws:ruc>
+            <ws:login>@@login@@</ws:login>
+            <ws:clave>@@clave@@</ws:clave>
+            <ws:tipoDoc>@@tipoDoc@@</ws:tipoDoc>
+            <ws:folio>@@folio@@</ws:folio>
+            <ws:tipoRetorno>@@tipoRetorno@@</ws:tipoRetorno>
+        </ws:OnlineRecovery>
+    </x:Body>
+</x:Envelope>
