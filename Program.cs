@@ -14,17 +14,18 @@ namespace sovos1
         const string URL = "http://spsa.paperless.com.pe/axis2/services/Online.OnlineHttpSoap11Endpoint";
         static void Main(string[] args)
         {
-            recovery();
-            //generation();
+
+            //recovery("FA25-00038997");
+            //generation("FA04-00119464");
         }
 
-        static void recovery(){
+        static void recovery(string folio){
             var ruc="20394077101";
             var login="admin_hpo";
             var clave="abc123";
 
             var tipoDoc="1";
-            var folio="FA04-00119478";
+            //var folio="FA01-00447663";
             var tipoRetorno="3"; //1 url, 2 xml, 3 sunat
 
             string dataXml = File.ReadAllText("recovery.xml");
@@ -51,17 +52,16 @@ namespace sovos1
 
             XDocument docd = XDocument.Parse(dataXmlRet);
 
-            Console.WriteLine(docd.Element("Respuesta").Element("Codigo").Value);
-            Console.WriteLine(docd.Element("Respuesta").Element("Mensaje").Value);
+            Console.WriteLine("Folio {0}: Status: {1} - {2}",folio,docd.Element("Respuesta").Element("Codigo").Value,docd.Element("Respuesta").Element("Mensaje").Value);
         }
-        static void generation(){
+        static void generation(string folio){
 
             var ruc="20394077101";
             var login="admin_hpo";
             var clave="abc123";
 
             string dataXml = File.ReadAllText("generation.xml");
-            string dataText = File.ReadAllText("data.txt");
+            string dataText = File.ReadAllText(folio+ ".txt");
 
             dataXml=dataXml.Replace("@@ruc@@",ruc);
             dataXml=dataXml.Replace("@@login@@",login);
