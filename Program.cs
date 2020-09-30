@@ -22,36 +22,28 @@ namespace sovos1
             //ruc="20394077101"; //HPO
             login="admin_hpo";
             clave="abc123";
-            string [] folios={
-"FA18-00516964",
-"FA18-00527684",
-"FA20-00340987",
-"FA20-00364797",
-"FA24-00339505",
-"FA24-00294784",
-"FA25-00039022",
-"FA30-00184374"
 
-            };
+            String sfolios = File.ReadAllText("data.in");
+            string [] folios= sfolios.Split("\r\n");
 
             foreach (var item in folios)
             {
+               
                 string message = recovery(item);
-                if (message.StartsWith("Respuesta SUNAT: 2028 - 2028") || message.StartsWith("Respuesta SUNAT: 3127 - 3127")
-                  || message.StartsWith("Respuesta SUNAT: 3031 - 3031") || message.StartsWith("Respuesta SUNAT: 3035 - 3035")
+                if (message.StartsWith("Respuesta SUNAT: 2028 - 2028") 
+                    || message.StartsWith("Respuesta SUNAT: 3127 - 3127")
+                    || message.StartsWith("Respuesta SUNAT: 3031 - 3031") 
+                    || message.StartsWith("Respuesta SUNAT: 3035 - 3035")
                   ){
-                    Console.WriteLine("Procesar "+ item);
+                    //Console.WriteLine("Procesar "+ item);
                     generation(item, ruc);
                 }
+                
                 //
             }
         }
 
         static String recovery(string folio){
-            //var ruc="20394077101";
-            //var login="admin_hpo";
-            //var clave="abc123";
-
 
             var tipoDoc="1";
             //var folio="FA01-00447663";
@@ -80,8 +72,10 @@ namespace sovos1
             dataXmlRet = Regex.Replace(dataXmlRet, "&(?!(amp|apos|quot|lt|gt);)", "&amp;");
 
             XDocument docd = XDocument.Parse(dataXmlRet);
-
-            Console.WriteLine("Folio {0}: Status: {1} - {2}",folio,docd.Element("Respuesta").Element("Codigo").Value,docd.Element("Respuesta").Element("Mensaje").Value);
+            Console.WriteLine("Folio {0}: Status: {1} - {2}",
+                folio,
+                docd.Element("Respuesta").Element("Codigo").Value,
+                docd.Element("Respuesta").Element("Mensaje").Value);
             return docd.Element("Respuesta").Element("Mensaje").Value;
         }
         static void generation(string folio, string ruc){
