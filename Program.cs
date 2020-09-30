@@ -28,15 +28,20 @@ namespace sovos1
 
             foreach (var item in folios)
             {
-               
-                string message = recovery(item);
-                if (message.StartsWith("Respuesta SUNAT: 2028 - 2028") 
-                    || message.StartsWith("Respuesta SUNAT: 3127 - 3127")
-                    || message.StartsWith("Respuesta SUNAT: 3031 - 3031") 
-                    || message.StartsWith("Respuesta SUNAT: 3035 - 3035")
-                  ){
-                    //Console.WriteLine("Procesar "+ item);
-                    generation(item, ruc);
+
+                if (item!=""){
+                    string message = recovery(item);
+
+                    if (message.StartsWith("Respuesta SUNAT: 2028 - 2028") 
+                        || message.StartsWith("Respuesta SUNAT: 3127 - 3127")
+                        || message.StartsWith("Respuesta SUNAT: 3031 - 3031") 
+                        || message.StartsWith("Respuesta SUNAT: 3035 - 3035")
+                        || message.StartsWith("Respuesta SUNAT: 3202 - ")
+                    ){
+                        //Console.WriteLine("Procesar "+ item);
+                        generation(item, ruc);
+                    }
+
                 }
                 
                 //
