@@ -13,12 +13,12 @@ namespace sovos1
     class Program
     {
         const string URL = "http://spsa.paperless.com.pe/axis2/services/Online.OnlineHttpSoap11Endpoint";
-        static string ruc;
+        //static string ruc;
         static string login;
         static string clave;
         static void Main(string[] args)
         {
-            ruc="20536557858"; //HP
+            //ruc="20536557858"; //HP
             //ruc="20394077101"; //HPO
             login="admin_hpo";
             clave="abc123";
@@ -30,7 +30,9 @@ namespace sovos1
             {
 
                 if (item!=""){
-                    string message = recovery(item);
+                    string [] sLine = item.Split("\t");
+                    
+                    string message = recovery(sLine[1], sLine[0]);
 
                     if (message.StartsWith("Respuesta SUNAT: 2028 - 2028") 
                         || message.StartsWith("Respuesta SUNAT: 3127 - 3127")
@@ -39,7 +41,7 @@ namespace sovos1
                         || message.StartsWith("Respuesta SUNAT: 3202 - ")
                     ){
                         //Console.WriteLine("Procesar "+ item);
-                        generation(item, ruc);
+                        generation(sLine[0], sLine[1]);
                     }
 
                 }
@@ -48,7 +50,7 @@ namespace sovos1
             }
         }
 
-        static String recovery(string folio){
+        static String recovery(string ruc,string folio){
 
             var tipoDoc="1";
             //var folio="FA01-00447663";
