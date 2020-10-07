@@ -29,14 +29,17 @@ namespace sovos1
                     string [] conf = getConf(ruc);
 
                     if (conf!=null){
-                        if(conf.Length==4){
-                            string message = recovery(ruc, sLine[0],conf[1],conf[2]);
-                            if (message.StartsWith("Respuesta SUNAT: 2028 - 2028") 
-                                || message.StartsWith("Respuesta SUNAT: 3127 - 3127")
-                                || message.StartsWith("Respuesta SUNAT: 3031 - 3031") 
-                                || message.StartsWith("Respuesta SUNAT: 3035 - 3035")
-                                || message.StartsWith("Respuesta SUNAT: 3202 - ")
-                                || message.StartsWith("Documento no encontrado, RUC ")
+                        if(conf.Length==6){
+                            RetSovos retSovos1=  recovery(ruc, sLine[0],conf[1],conf[2]);
+
+                            saveData(sLine[0],ruc,conf[4],conf[5],retSovos1.code, retSovos1.message );
+
+                            if (retSovos1.message.StartsWith("Respuesta SUNAT: 2028 - 2028") 
+                                || retSovos1.message.StartsWith("Respuesta SUNAT: 3127 - 3127")
+                                || retSovos1.message.StartsWith("Respuesta SUNAT: 3031 - 3031") 
+                                || retSovos1.message.StartsWith("Respuesta SUNAT: 3035 - 3035")
+                                //|| retSovos1.message.StartsWith("Respuesta SUNAT: 3202 - ")
+                                || retSovos1.message.StartsWith("Documento no encontrado, RUC ")
                             ){
                                 generation(sLine[0], sLine[1],conf[1],conf[2],conf[3]);
                             }                            
@@ -61,7 +64,7 @@ namespace sovos1
             return null;
         }
 
-        static String recovery(string ruc,string folio, string login, string clave){
+        static RetSovos recovery(string ruc,string folio, string login, string clave){
 
             var tipoDoc="1";
             //var folio="FA01-00447663";
@@ -102,7 +105,11 @@ namespace sovos1
                 folio,
                 docd.Element("Respuesta").Element("Codigo").Value,
                 message);
-            return docd.Element("Respuesta").Element("Mensaje").Value;
+
+            RetSovos retSovos = new RetSovos();
+            retSovos.code=  Int32.Parse(docd.Element("Respuesta").Element("Codigo").Value)  ;
+            retSovos.message = docd.Element("Respuesta").Element("Mensaje").Value;
+            return retSovos;
         }
         static void generation(string folio, string ruc,string login, string clave, string conString){
 
@@ -159,6 +166,23 @@ namespace sovos1
             return retData;
         }
 
+        static void saveData(string folio, string ruc, string conString,  string tableName, int retCode, string retMessage){
+            using(OracleConnection cn = new OracleConnection(conString)){
+                cn.Open();
+                string update = "update " + tableName + " set codigo_sovos=" + retCode + ", mensaje_sovos='" + retMessage + "' where"
+                 + " folio='" + folio + "' and ruc_emisor='" + ruc + "' and tipodoc='TFC'";
+                OracleCommand cmd = cn.CreateCommand();
+                cmd.CommandText= update;
+                cmd.CommandType= System.Data.CommandType.Text;
+
+                cmd.ExecuteNonQuery();
+
+            }
+
+        }
+
+
+
         static void call(){
             var url="http://spsa.paperless.com.pe/axis2/services/Online.OnlineHttpSoap11Endpoint";
             
@@ -206,5 +230,9 @@ namespace sovos1
             Console.WriteLine(docd.Element("Respuesta").Element("Codigo").Value);
             Console.WriteLine(docd.Element("Respuesta").Element("Mensaje").Value);
         }
+    }
+    public class RetSovos{
+        public int code { get; set; }
+        public string  message { get; set; }
     }
 }
