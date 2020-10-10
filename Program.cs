@@ -39,7 +39,10 @@ namespace sovos1
                                 || retSovos1.message.StartsWith("Respuesta SUNAT: 3031 - 3031") 
                                 || retSovos1.message.StartsWith("Respuesta SUNAT: 3035 - 3035")
                                 //|| retSovos1.message.StartsWith("Respuesta SUNAT: 3202 - ")
-                                || retSovos1.message.StartsWith("Documento no encontrado, RUC ")
+                                //|| retSovos1.message.StartsWith("Documento no encontrado, RUC ")
+                                //|| retSovos1.message.StartsWith("Respuesta SUNAT: 1008 - 1008")
+                                //|| retSovos1.message.StartsWith("No se encontro respuesta SUNAT")
+
                             ){
                                 generation(sLine[0], sLine[1],conf[1],conf[2],conf[3]);
                             }                            
